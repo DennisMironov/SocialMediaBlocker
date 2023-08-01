@@ -6,5 +6,36 @@
 </head>
 <body>
     <h1>Social Media Blocker</h1>
+    <p>Choose the websites you wish to block and for how long:</p>
+
+    <div class="block-options">
+        <label>
+            <input type="checkbox" id="facebookCheckbox"> Facebook
+        </label>
+        <br>
+        <label>
+            <input type="checkbox" id="twitterCheckbox"> Twitter
+        </label>
+        <br>
+        <label>
+            <input type="checkbox" id="instagramCheckbox"> Instagram
+        </label>
+    </div>
+
+    <div class="time-options">
+        <label>
+            Start Time:
+            <input type="time" id="startTime" value="09:00">
+        </label>
+        <br>
+        <label>
+            End Time:
+            <input type="time" id="endTime" value="18:00">
+        </label>
+    </div>
+
+    <button id="saveBtn">Save</button>
+
+    <script src="popup.js"></script>
 </body>
 </html>
