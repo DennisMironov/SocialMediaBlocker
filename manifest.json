@@ -10,11 +10,15 @@
 	"permissions": [
 		"activeTab",
 		"scripting",
-		"storage"
+		"storage",
+		"webRequest"
 	],
 	"host_permissions": [
 		"*://*.facebook.com/*",
 		"*://*.twitter.com/*",
 		"*://*.instagram.com/*"
-	]
+	],
+	"background": {
+		"service_worker": "background.js"
+	}
 }
