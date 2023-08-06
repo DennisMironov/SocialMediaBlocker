@@ -8,10 +8,11 @@
 		"default_icon": "icon.png"
 	},
 	"permissions": [
+		"declarativeNetRequest",
+		"webNavigation",
 		"activeTab",
 		"scripting",
-		"storage",
-		"webRequest"
+		"storage"
 	],
 	"host_permissions": [
 		"*://*.facebook.com/*",

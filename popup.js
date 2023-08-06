@@ -9,12 +9,12 @@ function saveCheckedBoxes() {
         facebookCheckbox: facebookCheckbox.checked,
         twitterCheckbox: twitterCheckbox.checked,
         instagramCheckbox: instagramCheckbox.checked,
-        startTimeInput: startTimeInput.value,
-        endTimeInput: endTimeInput.value,
+        startTime: startTimeInput.value,
+        endTime: endTimeInput.value,
     };
 
     chrome.runtime.sendMessage({ action: 'saveSettings', settings: checkedBoxes }, function (response) {
-        console.log('Settings saved in background script');
+        console.log('Settings saved in background script:', response);
     });
 
     chrome.storage.sync.set(checkedBoxes, function () {
@@ -23,7 +23,7 @@ function saveCheckedBoxes() {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-    chrome.storage.sync.get(['facebookCheckbox', 'twitterCheckbox', 'instagramCheckbox', 'startTimeInput', 'endTimeInput'], function (result) {
+    chrome.storage.sync.get(['facebookCheckbox', 'twitterCheckbox', 'instagramCheckbox', 'startTime', 'endTime'], function (result) {
         const facebookCheckbox = document.getElementById('facebookCheckbox');
         const twitterCheckbox = document.getElementById('twitterCheckbox');
         const instagramCheckbox = document.getElementById('instagramCheckbox');
@@ -33,8 +33,8 @@ document.addEventListener('DOMContentLoaded', function () {
         facebookCheckbox.checked = result.facebookCheckbox || false;
         twitterCheckbox.checked = result.twitterCheckbox || false;
         instagramCheckbox.checked = result.instagramCheckbox || false;
-        startTimeInput.value = result.startTimeInput || '';
-        endTimeInput.value = result.endTimeInput || '';
+        startTimeInput.value = result.startTime || '';
+        endTimeInput.value = result.endTime || '';
 
         console.log('Retrieved data:', result);
     });

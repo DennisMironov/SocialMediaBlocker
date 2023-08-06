@@ -1,3 +1,58 @@
+const blockRuleId = 1;
+
+chrome.runtime.onInstalled.addListener(function () {
+    chrome.declarativeNetRequest.updateDynamicRules({
+        removeRuleIds: [blockRuleId],
+        addRules: [
+            {
+                id: blockRuleId,
+                priority: 1,
+                action: {
+                    type: "block"
+                },
+                condition: {
+                    urlFilter: "||twitter.com/",
+                    resourceTypes: ["main_frame"]
+                }
+            }
+        ]
+    });
+});
+
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+    if (request.action === "saveSettings") {
+        const { startTime, endTime } = request.settings;
+
+        if (checkBlockingTime(startTime, endTime)) {
+            chrome.declarativeNetRequest.updateDynamicRules({
+                removeRuleIds: [blockRuleId],
+                addRules: [
+                    {
+                        id: blockRuleId,
+                        priority: 1,
+                        action: {
+                            type: "block"
+                        },
+                        condition: {
+                            urlFilter: "||twitter.com/",
+                            resourceTypes: ["main_frame"]
+                        }
+                    }
+                ]
+            });
+
+            sendResponse({ blocked: true });
+            return;
+        }
+
+        chrome.declarativeNetRequest.updateDynamicRules({
+            removeRuleIds: [blockRuleId]
+        });
+
+        sendResponse({ blocked: false });
+    }
+});
+
 function checkBlockingTime(startTime, endTime) {
     const currentTime = new Date();
     const startTimeDate = new Date(currentTime.toDateString() + " " + startTime);
@@ -5,22 +60,3 @@ function checkBlockingTime(startTime, endTime) {
 
     return currentTime >= startTimeDate && currentTime <= endTimeDate;
 }
-
-function blockRequest(details) {
-    chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-        if (request.action === 'saveSettings') {
-            const { startTime, endTime } = request.settings;
-
-            if (checkBlockingTime(startTime, endTime) && (details.url.includes('facebook.com') || details.url.includes('twitter.com') || details.url.includes('instagram.com'))) {
-                sendResponse({ blocked: true });
-                return { cancel: true };
-            }
-        }
-    });
-}
-
-chrome.webRequest.onBeforeRequest.addListener(
-    blockRequest,
-    { urls: ['<all_urls>'] },
-    ['blocking']
-);
