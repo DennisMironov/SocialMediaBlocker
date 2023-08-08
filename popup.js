@@ -20,6 +20,8 @@ function saveCheckedBoxes() {
     chrome.storage.sync.set(checkedBoxes, function () {
         console.log('Checked boxes and time data saved:', checkedBoxes);
     });
+
+    alert("Settings saved and applied.");
 }
 
 document.addEventListener('DOMContentLoaded', function () {
