@@ -1,76 +1,83 @@
-// Bug: Still blocked after end time, need to hit 'save' for it to become unblocked. Vice versa also applies, i.e. doesn't block after reaching start time, need to hit save during blocking period.
-chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-    if (request.action === "saveSettings") {
-        const { facebookCheckbox, twitterCheckbox, instagramCheckbox, startTime, endTime } = request.settings;
+// Bug: Hitting save does not apply block right away - Potential fix: sendMessage from popup to background when clicking save and call checkBlockingTimeAndBlock
+chrome.alarms.create("timeCheck", { periodInMinutes: 1 });
 
-        chrome.declarativeNetRequest.updateDynamicRules({
-            removeRuleIds: [1, 2, 3]
-        });
-
-        if (checkBlockingTime(startTime, endTime)) {
-            if (facebookCheckbox) {
-                chrome.declarativeNetRequest.updateDynamicRules({
-                    addRules: [
-                        {
-                            id: 1,
-                            priority: 1,
-                            action: {
-                                type: "block"
-                            },
-                            condition: {
-                                urlFilter: "||facebook.com/",
-                                resourceTypes: ["main_frame"]
-                            }
-                        }
-                    ]
-                });
-            }
-            if (twitterCheckbox) {
-                chrome.declarativeNetRequest.updateDynamicRules({
-                    addRules: [
-                        {
-                            id: 2,
-                            priority: 1,
-                            action: {
-                                type: "block"
-                            },
-                            condition: {
-                                urlFilter: "||twitter.com/",
-                                resourceTypes: ["main_frame"]
-                            }
-                        }
-                    ]
-                });
-            }
-            if (instagramCheckbox) {
-                chrome.declarativeNetRequest.updateDynamicRules({
-                    addRules: [
-                        {
-                            id: 3,
-                            priority: 1,
-                            action: {
-                                type: "block"
-                            },
-                            condition: {
-                                urlFilter: "||instagram.com/",
-                                resourceTypes: ["main_frame"]
-                            }
-                        }
-                    ]
-                });
-            }
-
-            sendResponse({ blocked: true });
-            return;
-        }
-
-        chrome.declarativeNetRequest.updateDynamicRules({
-            removeRuleIds: [1, 2, 3]
-        });
-
-        sendResponse({ blocked: false });
+chrome.alarms.onAlarm.addListener(function (alarm) {
+    if (alarm.name === "timeCheck") {
+        checkBlockingTimeAndBlock();
     }
 });
+
+function checkBlockingTimeAndBlock() {
+    chrome.storage.sync.get(["startTime", "endTime"], function (result) {
+        const startTime = result.startTime || '';
+        const endTime = result.endTime || '';
+
+        if (checkBlockingTime(startTime, endTime)) {
+            chrome.storage.sync.get(["facebookCheckbox", "twitterCheckbox", "instagramCheckbox"], function (checkboxes) {
+                chrome.declarativeNetRequest.updateDynamicRules({
+                    removeRuleIds: [1, 2, 3]
+                });
+
+                if (checkboxes.facebookCheckbox) {
+                    chrome.declarativeNetRequest.updateDynamicRules({
+                        addRules: [
+                            {
+                                id: 1,
+                                priority: 1,
+                                action: {
+                                    type: "block"
+                                },
+                                condition: {
+                                    urlFilter: "||facebook.com/",
+                                    resourceTypes: ["main_frame"]
+                                }
+                            }
+                        ]
+                    });
+                }
+                if (checkboxes.twitterCheckbox) {
+                    chrome.declarativeNetRequest.updateDynamicRules({
+                        addRules: [
+                            {
+                                id: 2,
+                                priority: 1,
+                                action: {
+                                    type: "block"
+                                },
+                                condition: {
+                                    urlFilter: "||twitter.com/",
+                                    resourceTypes: ["main_frame"]
+                                }
+                            }
+                        ]
+                    });
+                }
+                if (checkboxes.instagramCheckbox) {
+                    chrome.declarativeNetRequest.updateDynamicRules({
+                        addRules: [
+                            {
+                                id: 3,
+                                priority: 1,
+                                action: {
+                                    type: "block"
+                                },
+                                condition: {
+                                    urlFilter: "||instagram.com/",
+                                    resourceTypes: ["main_frame"]
+                                }
+                            }
+                        ]
+                    });
+                }
+            });
+        }
+        else {
+            chrome.declarativeNetRequest.updateDynamicRules({
+                removeRuleIds: [1, 2, 3]
+            });
+        }
+    });
+}
 
 function checkBlockingTime(startTime, endTime) {
     const currentTime = new Date();

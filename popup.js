@@ -13,10 +13,6 @@ function saveCheckedBoxes() {
         endTime: endTimeInput.value,
     };
 
-    chrome.runtime.sendMessage({ action: 'saveSettings', settings: checkedBoxes }, function (response) {
-        console.log('Settings saved in background script:', response);
-    });
-
     chrome.storage.sync.set(checkedBoxes, function () {
         console.log('Checked boxes and time data saved:', checkedBoxes);
     });

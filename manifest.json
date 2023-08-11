@@ -12,7 +12,8 @@
 		"webNavigation",
 		"activeTab",
 		"scripting",
-		"storage"
+		"storage",
+		"alarms"
 	],
 	"host_permissions": [
 		"*://*.facebook.com/*",
