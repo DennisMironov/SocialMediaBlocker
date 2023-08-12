@@ -1,10 +1,17 @@
-// Bug: Hitting save does not apply block right away - Potential fix: sendMessage from popup to background when clicking save and call checkBlockingTimeAndBlock
 chrome.alarms.create("timeCheck", { periodInMinutes: 1 });
 
 chrome.alarms.onAlarm.addListener(function (alarm) {
     if (alarm.name === "timeCheck") {
         checkBlockingTimeAndBlock();
     }
+});
+
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+    if (request.action === "saveSettings") {
+        checkBlockingTimeAndBlock();
+    }
+
+    return true;
 });
 
 function checkBlockingTimeAndBlock() {

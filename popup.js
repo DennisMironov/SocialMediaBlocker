@@ -17,6 +17,10 @@ function saveCheckedBoxes() {
         console.log('Checked boxes and time data saved:', checkedBoxes);
     });
 
+    chrome.runtime.sendMessage({ action: "saveSettings" }, function (response) {
+        console.log("Settings applied");
+    });
+
     alert("Settings saved and applied.");
 }
 
