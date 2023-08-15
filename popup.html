@@ -9,33 +9,36 @@
     <p>Choose the websites you wish to block and for how long:</p>
 
     <div class="block-options">
-        <label>
-            <input type="checkbox" id="facebookCheckbox"> Facebook
+        <label class="container">Facebook
+            <input type="checkbox" id="facebookCheckbox">
+            <span class="checkmark"></span>
         </label>
-        <br>
-        <label>
-            <input type="checkbox" id="twitterCheckbox"> Twitter
+
+        <label class="container">Twitter
+            <input type="checkbox" id="twitterCheckbox">
+            <span class="checkmark"></span>
         </label>
-        <br>
-        <label>
-            <input type="checkbox" id="instagramCheckbox"> Instagram
-        </label>
+
+        <label class="container">Instagram
+            <input type="checkbox" id="instagramCheckbox">
+            <span class="checkmark"></span>
+        </label>  
     </div>
 
     <div class="time-options">
-        <label>
-            Start Time:
+        <label class="time-label time-label-first">Start Time
             <input type="time" id="startTime" value="09:00">
         </label>
         <br>
-        <label>
-            End Time:
+        <label class="time-label">End Time
             <input type="time" id="endTime" value="17:00">
         </label>
     </div>
 
-    <button id="saveBtn">Save</button>
-
+    <div class="button-container">
+        <button id="saveBtn">Save</button>
+    </div>
+    
     <script src="popup.js"></script>
 </body>
 </html>
