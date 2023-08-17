@@ -20,9 +20,9 @@ function checkBlockingTimeAndBlock() {
         const endTime = result.endTime || '';
 
         if (checkBlockingTime(startTime, endTime)) {
-            chrome.storage.sync.get(["facebookCheckbox", "twitterCheckbox", "instagramCheckbox"], function (checkboxes) {
+            chrome.storage.sync.get(["facebookCheckbox", "twitterCheckbox", "instagramCheckbox", "tiktokCheckbox"], function (checkboxes) {
                 chrome.declarativeNetRequest.updateDynamicRules({
-                    removeRuleIds: [1, 2, 3]
+                    removeRuleIds: [1, 2, 3, 4]
                 });
 
                 if (checkboxes.facebookCheckbox) {
@@ -76,11 +76,28 @@ function checkBlockingTimeAndBlock() {
                         ]
                     });
                 }
+                if (checkboxes.tiktokCheckbox) {
+                    chrome.declarativeNetRequest.updateDynamicRules({
+                        addRules: [
+                            {
+                                id: 4,
+                                priority: 1,
+                                action: {
+                                    type: "block"
+                                },
+                                condition: {
+                                    urlFilter: "||tiktok.com/",
+                                    resourceTypes: ["main_frame"]
+                                }
+                            }
+                        ]
+                    });
+                }
             });
         }
         else {
             chrome.declarativeNetRequest.updateDynamicRules({
-                removeRuleIds: [1, 2, 3]
+                removeRuleIds: [1, 2, 3, 4]
             });
         }
     });
