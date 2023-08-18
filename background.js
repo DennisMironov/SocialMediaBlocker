@@ -20,9 +20,9 @@ function checkBlockingTimeAndBlock() {
         const endTime = result.endTime || '';
 
         if (checkBlockingTime(startTime, endTime)) {
-            chrome.storage.sync.get(["facebookCheckbox", "twitterCheckbox", "instagramCheckbox", "tiktokCheckbox", "redditCheckbox"], function (checkboxes) {
+            chrome.storage.sync.get(["facebookCheckbox", "twitterCheckbox", "instagramCheckbox", "tiktokCheckbox", "redditCheckbox", "youtubeCheckbox"], function (checkboxes) {
                 chrome.declarativeNetRequest.updateDynamicRules({
-                    removeRuleIds: [1, 2, 3, 4, 5]
+                    removeRuleIds: [1, 2, 3, 4, 5, 6]
                 });
 
                 if (checkboxes.facebookCheckbox) {
@@ -110,11 +110,35 @@ function checkBlockingTimeAndBlock() {
                         ]
                     });
                 }
+                if (checkboxes.youtubeCheckbox) {
+                    chrome.browsingData.remove({
+                        origins: [new URL("https://www.youtube.com/").origin],
+                    }, {
+                        cacheStorage: true,
+                        serviceWorkers: true,
+                    });
+
+                    chrome.declarativeNetRequest.updateDynamicRules({
+                        addRules: [
+                            {
+                                id: 6,
+                                priority: 1,
+                                action: {
+                                    type: "block"
+                                },
+                                condition: {
+                                    urlFilter: "||youtube.com/",
+                                    resourceTypes: ["main_frame", "sub_frame"]
+                                }
+                            }
+                        ]
+                    });
+                }
             });
         }
         else {
             chrome.declarativeNetRequest.updateDynamicRules({
-                removeRuleIds: [1, 2, 3, 4, 5]
+                removeRuleIds: [1, 2, 3, 4, 5, 6]
             });
         }
     });

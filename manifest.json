@@ -13,14 +13,16 @@
 		"activeTab",
 		"scripting",
 		"storage",
-		"alarms"
+		"alarms",
+		"browsingData"
 	],
 	"host_permissions": [
 		"*://*.facebook.com/*",
 		"*://*.twitter.com/*",
 		"*://*.instagram.com/*",
 		"*://*.tiktok.com/*",
-		"*://*.reddit.com/*"
+		"*://*.reddit.com/*",
+		"*://*.youtube.com/*"
 	],
 	"background": {
 		"service_worker": "background.js"
