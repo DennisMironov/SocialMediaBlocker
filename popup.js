@@ -3,6 +3,7 @@ function saveCheckedBoxes() {
     const twitterCheckbox = document.getElementById('twitterCheckbox');
     const instagramCheckbox = document.getElementById('instagramCheckbox');
     const tiktokCheckbox = document.getElementById('tiktokCheckbox');
+    const redditCheckbox = document.getElementById('redditCheckbox');
     const startTimeInput = document.getElementById('startTime');
     const endTimeInput = document.getElementById('endTime');
 
@@ -11,6 +12,7 @@ function saveCheckedBoxes() {
         twitterCheckbox: twitterCheckbox.checked,
         instagramCheckbox: instagramCheckbox.checked,
         tiktokCheckbox: tiktokCheckbox.checked,
+        redditCheckbox: redditCheckbox.checked,
         startTime: startTimeInput.value,
         endTime: endTimeInput.value,
     };
@@ -27,11 +29,12 @@ function saveCheckedBoxes() {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-    chrome.storage.sync.get(['facebookCheckbox', 'twitterCheckbox', 'instagramCheckbox', 'tiktokCheckbox', 'startTime', 'endTime'], function (result) {
+    chrome.storage.sync.get(['facebookCheckbox', 'twitterCheckbox', 'instagramCheckbox', 'tiktokCheckbox', 'redditCheckbox', 'startTime', 'endTime'], function (result) {
         const facebookCheckbox = document.getElementById('facebookCheckbox');
         const twitterCheckbox = document.getElementById('twitterCheckbox');
         const instagramCheckbox = document.getElementById('instagramCheckbox');
         const tiktokCheckbox = document.getElementById('tiktokCheckbox');
+        const redditCheckbox = document.getElementById('redditCheckbox');
         const startTimeInput = document.getElementById('startTime');
         const endTimeInput = document.getElementById('endTime');
 
@@ -39,6 +42,7 @@ document.addEventListener('DOMContentLoaded', function () {
         twitterCheckbox.checked = result.twitterCheckbox || false;
         instagramCheckbox.checked = result.instagramCheckbox || false;
         tiktokCheckbox.checked = result.tiktokCheckbox || false;
+        redditCheckbox.checked = result.redditCheckbox || false;
         startTimeInput.value = result.startTime || '';
         endTimeInput.value = result.endTime || '';
 

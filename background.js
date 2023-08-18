@@ -20,9 +20,9 @@ function checkBlockingTimeAndBlock() {
         const endTime = result.endTime || '';
 
         if (checkBlockingTime(startTime, endTime)) {
-            chrome.storage.sync.get(["facebookCheckbox", "twitterCheckbox", "instagramCheckbox", "tiktokCheckbox"], function (checkboxes) {
+            chrome.storage.sync.get(["facebookCheckbox", "twitterCheckbox", "instagramCheckbox", "tiktokCheckbox", "redditCheckbox"], function (checkboxes) {
                 chrome.declarativeNetRequest.updateDynamicRules({
-                    removeRuleIds: [1, 2, 3, 4]
+                    removeRuleIds: [1, 2, 3, 4, 5]
                 });
 
                 if (checkboxes.facebookCheckbox) {
@@ -93,11 +93,28 @@ function checkBlockingTimeAndBlock() {
                         ]
                     });
                 }
+                if (checkboxes.redditCheckbox) {
+                    chrome.declarativeNetRequest.updateDynamicRules({
+                        addRules: [
+                            {
+                                id: 5,
+                                priority: 1,
+                                action: {
+                                    type: "block"
+                                },
+                                condition: {
+                                    urlFilter: "||reddit.com/",
+                                    resourceTypes: ["main_frame"]
+                                }
+                            }
+                        ]
+                    });
+                }
             });
         }
         else {
             chrome.declarativeNetRequest.updateDynamicRules({
-                removeRuleIds: [1, 2, 3, 4]
+                removeRuleIds: [1, 2, 3, 4, 5]
             });
         }
     });
